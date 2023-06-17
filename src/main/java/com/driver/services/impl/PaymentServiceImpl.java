@@ -28,16 +28,30 @@ public class PaymentServiceImpl implements PaymentService {
             throw new Exception("reservation id not found");
         }
         Reservation reservation = reservationOptional.get();
+        mode = mode.toUpperCase();
         int cost = reservation.getNumberOfHours() * reservation.getSpot().getPricePerHour();
-        if(mode !=("CARD") && mode !=("CASH") && mode !=("UPI")){
+        if((!mode.equals("CARD")) && (!mode .equals("CASH")) && (!mode .equals("UPI"))){
             throw new Exception("Payment mode not detected");
         }
         if(amountSent < cost){
             throw new Exception("Insufficient Amount");
         }
         Payment payment = new Payment();
+        if(mode.equals("cash"))
+        {
+            payment.setPaymentMode(PaymentMode.CASH);
+        }
+        else if(mode.equals("card"))
+        {
+            payment.setPaymentMode(PaymentMode.CARD);
+        }
+        else
+        {
+            payment.setPaymentMode(PaymentMode.UPI);
+        }
+        payment.setReservation(reservation);
         payment.setPaymentCompleted(true);
-        paymentRepository2.save(payment);
+        reservationRepository2.save(reservation);
         return payment;
     }
 }
