@@ -37,6 +37,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
         Payment payment = new Payment();
         payment.setPaymentCompleted(true);
+        paymentRepository2.save(payment);
         return payment;
     }
 }
