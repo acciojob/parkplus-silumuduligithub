@@ -1,26 +1,28 @@
 package com.driver.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.ManyToAny;import javax.persistence.*;import java.util.ArrayList;import java.util.List;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 @Entity
-@Table
-public class Spot {
+public class Spot
+{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @Enumerated(EnumType.STRING)
-    private SpotType spotType;
-    private int pricePerHour;
-    private boolean occupied;
-    @ManyToOne
-    @JoinColumn
-    ParkingLot parkingLot;
 
-    @OneToMany(mappedBy = "spot", cascade = CascadeType.ALL)
-    List<Reservation> reservationList = new ArrayList<>();
+    private SpotType spotType;
+
+    private int pricePerHour;
+
+    private boolean occupied;
+
+    public Spot(int id, SpotType spotType, int pricePerHour, boolean occupied) {
+        this.id = id;
+        this.spotType = spotType;
+        this.pricePerHour = pricePerHour;
+        this.occupied = occupied;
+    }
+
+    public Spot() {}
 
     public int getId() {
         return id;
@@ -70,15 +72,9 @@ public class Spot {
         this.reservationList = reservationList;
     }
 
-    public Spot() {
-    }
+    @ManyToOne
+    @JoinColumn ParkingLot parkingLot;
 
-    public Spot(int id, SpotType spotType, int pricePerHour, boolean occupied, ParkingLot parkingLot, List<Reservation> reservationList) {
-        this.id = id;
-        this.spotType = spotType;
-        this.pricePerHour = pricePerHour;
-        this.occupied = occupied;
-        this.parkingLot = parkingLot;
-        this.reservationList = reservationList;
-    }
+    @OneToMany(mappedBy = "spot",cascade = CascadeType.ALL)
+    List<Reservation> reservationList=new ArrayList<>();
 }
